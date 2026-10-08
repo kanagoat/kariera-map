@@ -1,0 +1,990 @@
+/* Түстер: Қазақстан аспаны мен алтыны, тау қары.
+ * Қаріптер: Montserrat (тақырып), Golos Text (мәтін). Екеуі де қазақ әріптерін (ә ғ қ ң ө ұ ү һ і)
+ * толық қамтиды және сайттың өзінде тұр (fonts/, OFL лицензиясы): бөгде серверге сұрау жоқ. */
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url("fonts/golos-text-cyrillic-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url("fonts/golos-text-cyrillic-wght-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url("fonts/golos-text-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url("fonts/montserrat-cyrillic-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url("fonts/montserrat-cyrillic-wght-normal.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  src: url("fonts/montserrat-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --ink: #12233f;
+  --muted: #56677f;
+  --paper: #eef5f9;
+  --snow: #ffffff;
+  --mist: #d5e3ec;
+  --sky: #0e86b4;
+  --sky-deep: #0a5f84;
+  --sky-wash: #dff1f8;
+  --gold: #f4b740;
+  --gold-wash: #fdf1d3;
+  --alarm: #b8371f;
+  --radius: 18px;
+  --display: "Montserrat", "Golos Text", system-ui, sans-serif;
+  --body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.5;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+h1:focus,
+h2:focus {
+  outline: none;
+}
+
+/* ---------- жоғарғы жол: соқпақ ---------- */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(238, 245, 249, 0.94);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--mist);
+}
+.top-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 10px 16px 12px;
+}
+.top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--sky-deep);
+}
+.lang {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--mist);
+}
+.lang button {
+  border: 0;
+  background: transparent;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.lang button.on {
+  background: var(--snow);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(18, 35, 63, 0.15);
+}
+.trail {
+  list-style: none;
+  display: flex;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.trail li {
+  flex: 1;
+  position: relative;
+  font-size: 12px;
+  color: var(--muted);
+}
+.trail li::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  border-top: 2px dotted var(--mist);
+}
+.trail li.done::before {
+  border-top: 2px solid var(--sky);
+}
+.trail .dot {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--snow);
+  border: 2px solid var(--mist);
+}
+.trail li.done .dot {
+  background: var(--sky);
+  border-color: var(--sky);
+}
+.trail li.now .dot {
+  background: var(--gold);
+  border-color: var(--ink);
+}
+.trail .lbl {
+  display: block;
+  margin-top: 4px;
+}
+.trail li.now .lbl {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- бет ---------- */
+.stage {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 72px;
+}
+.card {
+  background: var(--snow);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  border: 1px solid var(--mist);
+}
+.center {
+  text-align: center;
+}
+h1,
+h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 14px;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(26px, 6.4vw, 38px);
+}
+h2 {
+  font-size: clamp(19px, 4.6vw, 24px);
+}
+h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+.lead {
+  font-size: 18px;
+  margin: 0 0 18px;
+}
+.hint {
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+.hint.small {
+  font-size: 15px;
+  margin-top: 16px;
+}
+.opt {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+/* ---------- сәлемдесу ---------- */
+.hero {
+  padding-top: 4px;
+}
+.ridge {
+  display: block;
+  width: calc(100% + 32px);
+  margin: -20px -16px 18px;
+  background: linear-gradient(#bfe3f2, #eef5f9 88%);
+}
+.ridge .far {
+  fill: #9fcfe3;
+}
+.ridge .near,
+.peak .near {
+  fill: var(--sky-deep);
+}
+.ridge .route {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 2 11;
+}
+.ridge .wp {
+  fill: var(--snow);
+  stroke: var(--gold);
+  stroke-width: 3;
+}
+.ridge .flag,
+.peak .flag {
+  fill: var(--gold);
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+.peak {
+  width: 120px;
+  margin: 0 auto 10px;
+  display: block;
+}
+.facts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 22px;
+  border-top: 1px solid var(--mist);
+}
+.facts li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--mist);
+}
+.demo {
+  margin: 18px 0 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--gold-wash);
+  font-size: 15px;
+}
+
+/* ---------- түймелер ---------- */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.center .actions {
+  justify-content: center;
+}
+.btn {
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn.primary {
+  background: var(--sky);
+  color: #fff;
+  flex: 1 1 auto;
+}
+.btn.primary:hover {
+  background: var(--sky-deep);
+}
+.btn.ghost {
+  background: transparent;
+  border-color: var(--mist);
+  color: var(--ink);
+}
+.btn.ghost:hover {
+  border-color: var(--sky);
+}
+.link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--sky-deep);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- өрістер ---------- */
+.field {
+  display: block;
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.field input[type="text"],
+.field select,
+.field textarea {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 13px 14px;
+  border: 2px solid var(--mist);
+  border-radius: 12px;
+  background: var(--snow);
+  font-weight: 400;
+}
+.field input[type="text"]:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--sky);
+  outline: none;
+}
+.field input[type="range"] {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  accent-color: var(--sky);
+}
+.field output {
+  float: right;
+  font-family: var(--display);
+  font-size: 15px;
+  color: var(--sky-deep);
+}
+.range-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.chip {
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--mist);
+  background: var(--snow);
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+}
+.chip.on {
+  background: var(--sky-wash);
+  border-color: var(--sky);
+  color: var(--sky-deep);
+  font-weight: 600;
+}
+.check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-weight: 400;
+  margin: 4px 0 0;
+}
+.check input {
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  flex: none;
+  accent-color: var(--sky);
+}
+.check.small {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.error {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fbe9e4;
+  color: var(--alarm);
+  font-weight: 600;
+}
+
+/* ---------- бір тұжырым ---------- */
+.count {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--mist);
+  overflow: hidden;
+}
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--sky);
+}
+.statement {
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: clamp(21px, 5.2vw, 26px);
+  line-height: 1.3;
+  min-height: 3.9em;
+  margin-bottom: 18px;
+}
+.scale {
+  display: grid;
+  gap: 8px;
+}
+.pick {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 54px;
+  padding: 6px 16px 6px 8px;
+  border-radius: 999px;
+  border: 2px solid var(--mist);
+  background: var(--snow);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s, border-color 0.12s;
+}
+.pick .num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--paper);
+  font-family: var(--display);
+  font-size: 14px;
+}
+.pick:hover {
+  border-color: var(--sky);
+}
+.pick.on {
+  background: var(--sky);
+  border-color: var(--sky);
+  color: #fff;
+}
+.pick.on .num {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+/* ықшам шкала: пәндер мен сезім сұрақтары */
+.scale-compact {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  max-width: 320px;
+}
+.scale-compact .pick {
+  justify-content: center;
+  padding: 0;
+  min-height: 46px;
+}
+.scale-compact .pick .num {
+  background: transparent;
+  width: auto;
+  height: auto;
+}
+.scale-compact .pick.on .num {
+  background: transparent;
+  color: #fff;
+}
+
+/* ---------- реттеу ---------- */
+.rank {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 22px;
+  display: grid;
+  gap: 10px;
+}
+.rank-item {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 2px solid var(--mist);
+  background: var(--snow);
+  cursor: pointer;
+  text-align: left;
+}
+.rank-item .place {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px dashed var(--mist);
+  font-family: var(--display);
+  font-size: 15px;
+}
+.rank-item.on {
+  border-color: var(--sky);
+  background: var(--sky-wash);
+}
+.rank-item.on .place {
+  border: 2px solid var(--ink);
+  background: var(--gold);
+}
+.rank-name {
+  display: block;
+  font-weight: 600;
+}
+.rank-blurb {
+  display: block;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* ---------- пәндер ---------- */
+.legend {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--paper);
+  font-size: 15px;
+}
+.legend div + div {
+  margin-top: 8px;
+}
+.legend dt {
+  font-weight: 600;
+}
+.legend dd {
+  margin: 0;
+  color: var(--muted);
+}
+.subject {
+  margin: 0 0 14px;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--mist);
+  border-radius: var(--radius);
+  min-width: 0;
+}
+.subject legend {
+  padding: 0 8px;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
+}
+.subject.skipped {
+  background: var(--paper);
+}
+.mrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+.mlabel {
+  font-size: 15px;
+  flex: 1 1 110px;
+}
+.mrow .scale-compact {
+  flex: 1 1 230px;
+}
+.feel {
+  padding: 16px 0;
+  border-top: 1px solid var(--mist);
+}
+.feel p {
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+.feel:last-of-type {
+  border-bottom: 1px solid var(--mist);
+  margin-bottom: 22px;
+}
+
+/* ---------- жіберу ---------- */
+.spinner {
+  width: 44px;
+  height: 44px;
+  margin: 18px auto 6px;
+  border-radius: 50%;
+  border: 4px solid var(--mist);
+  border-top-color: var(--sky);
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.result {
+  text-align: left;
+  margin: 22px 0 0;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  background: var(--sky-wash);
+}
+.result ol {
+  margin: 0 0 10px;
+  padding-left: 22px;
+}
+.noscript {
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+@media (max-width: 480px) {
+  .trail .lbl {
+    font-size: 11px;
+  }
+  .trail li:not(.now) .lbl {
+    visibility: hidden;
+  }
+  .mrow {
+    flex-wrap: wrap;
+  }
+  .mrow .scale-compact {
+    max-width: none;
+    flex-basis: 100%;
+  }
+}
+/* ---------- қозғалыс ---------- */
+body {
+  background: radial-gradient(1200px 600px at 110% -10%, #d9eef8 0%, transparent 60%),
+    radial-gradient(900px 500px at -20% 110%, #fbefd0 0%, transparent 55%), var(--paper);
+  background-attachment: fixed;
+}
+
+/* экранға кіру */
+.enter {
+  animation: rise 0.5s var(--ease) both;
+}
+.enter-fwd {
+  animation-name: slide-in-r;
+}
+.enter-back {
+  animation-name: slide-in-l;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+}
+@keyframes slide-in-r {
+  from { opacity: 0; transform: translateX(28px); }
+}
+@keyframes slide-in-l {
+  from { opacity: 0; transform: translateX(-28px); }
+}
+.card {
+  box-shadow: 0 1px 2px rgba(18, 35, 63, 0.04), 0 10px 30px -12px rgba(18, 35, 63, 0.14);
+}
+
+/* сәлемдесу беті */
+.hero .ridge .far { animation: rise 0.9s var(--ease) both; }
+.hero .ridge .near { animation: rise 0.9s 0.1s var(--ease) both; }
+.ridge .route {
+  animation: march 1.4s linear infinite;
+}
+@keyframes march {
+  to { stroke-dashoffset: -26; }
+}
+.ridge .wp {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.5s var(--spring) both;
+}
+.ridge .w1 { animation-delay: 0.35s; }
+.ridge .w2 { animation-delay: 0.55s; }
+.ridge .w3 { animation-delay: 0.75s; }
+.ridge .flag,
+.peak .flag {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: wave 2.4s ease-in-out infinite;
+}
+@keyframes wave {
+  0%, 100% { transform: skewY(0deg) scaleX(1); }
+  50% { transform: skewY(-6deg) scaleX(0.92); }
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.2); }
+}
+.ridge .sun {
+  fill: #ffe09a;
+  opacity: 0.9;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: glow 4s ease-in-out infinite;
+}
+@keyframes glow {
+  50% { transform: scale(1.08); opacity: 1; }
+}
+.ridge .cloud {
+  fill: #fff;
+  opacity: 0.8;
+}
+.ridge .c1 { animation: drift 18s ease-in-out infinite alternate; }
+.ridge .c2 { animation: drift 24s ease-in-out infinite alternate-reverse; }
+@keyframes drift {
+  to { transform: translateX(60px); }
+}
+.facts li {
+  animation: rise 0.5s calc(0.25s + var(--i) * 0.08s) var(--ease) both;
+}
+
+/* түймелер */
+.btn {
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), background 0.18s, border-color 0.18s;
+}
+.btn.primary {
+  box-shadow: 0 6px 16px -6px rgba(14, 134, 180, 0.6);
+}
+.btn:hover {
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(0) scale(0.97);
+}
+.chip {
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.18s var(--ease);
+}
+.chip:hover {
+  border-color: var(--sky);
+}
+.chip:active {
+  transform: scale(0.95);
+}
+.chip.on {
+  animation: pop-soft 0.35s var(--spring);
+}
+@keyframes pop-soft {
+  50% { transform: scale(1.06); }
+}
+
+/* шкала */
+.ask .pick {
+  animation: rise 0.4s calc(0.08s + var(--i) * 0.04s) var(--ease) both;
+}
+.pick {
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.18s var(--ease);
+}
+.pick:hover {
+  transform: translateX(3px);
+}
+.scale-compact .pick:hover {
+  transform: translateY(-2px);
+}
+.pick:active {
+  transform: scale(0.97);
+}
+.pick.on .num {
+  animation: pop 0.4s var(--spring);
+}
+.bar span {
+  transition: width 0.6s var(--ease);
+  background: linear-gradient(90deg, var(--sky), #3fb0dc);
+}
+
+/* реттеу */
+.rank li {
+  animation: rise 0.45s calc(0.1s + var(--i) * 0.06s) var(--ease) both;
+}
+.rank-item {
+  transition: border-color 0.2s, background 0.2s, transform 0.2s var(--ease), box-shadow 0.2s;
+}
+.rank-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -10px rgba(18, 35, 63, 0.3);
+}
+.rank-item .place {
+  transition: background 0.2s, border-color 0.2s;
+}
+.rank-item.pop .place {
+  animation: pop 0.45s var(--spring);
+}
+
+/* пәндер мен сезімдер: толтырылғаны белгіленеді */
+.subject {
+  transition: border-color 0.3s, background 0.3s;
+}
+.subject.complete {
+  border-color: #9fd3e8;
+}
+.tick {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: var(--sky);
+  color: #fff;
+  font-size: 12px;
+  vertical-align: 2px;
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity 0.25s, transform 0.35s var(--spring);
+}
+.subject.complete .tick {
+  opacity: 1;
+  transform: scale(1);
+}
+.feel {
+  transition: background 0.3s;
+}
+.feel.complete p {
+  color: var(--sky-deep);
+}
+
+/* ашылатын өрістер */
+.reveal:not([hidden]) {
+  animation: rise 0.35s var(--ease) both;
+}
+.field output.bump {
+  animation: pop-soft 0.3s var(--spring);
+  display: inline-block;
+}
+
+/* қате */
+.error.shake {
+  animation: shake 0.4s ease;
+}
+@keyframes shake {
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* кезеңдер жолы */
+.trail li::before {
+  transition: border-color 0.4s;
+}
+.trail .dot {
+  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--spring);
+}
+.trail li.now .dot {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 0 rgba(244, 183, 64, 0.7);
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  70% { box-shadow: 0 0 0 9px rgba(244, 183, 64, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(244, 183, 64, 0); }
+}
+
+/* қысқа хабар */
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 92px;
+  z-index: 10;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 10px 30px -10px rgba(18, 35, 63, 0.5);
+  transform: translateX(-50%);
+  animation: toast-in 0.45s var(--spring) both;
+  transition: opacity 0.4s, transform 0.4s var(--ease);
+}
+.toast.out {
+  opacity: 0;
+  transform: translate(-50%, -12px);
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, -16px) scale(0.9); }
+}
+
+/* соңғы бет */
+.done {
+  position: relative;
+  overflow: hidden;
+}
+.done .peak .near {
+  animation: rise 0.7s var(--ease) both;
+}
+.done .peak .flag {
+  animation: flag-up 0.7s 0.4s var(--spring) both, wave 2.4s 1.1s ease-in-out infinite;
+}
+@keyframes flag-up {
+  from { opacity: 0; transform: translateY(14px); }
+}
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.confetti i {
+  position: absolute;
+  top: -12px;
+  left: var(--x);
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: fall 2.2s var(--d) cubic-bezier(0.3, 0.6, 0.5, 1) forwards;
+}
+@keyframes fall {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+  100% { opacity: 0; transform: translate(var(--dx), 420px) rotate(calc(var(--r) + 540deg)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .spinner {
+    animation: spin 3s linear infinite !important;
+  }
+}

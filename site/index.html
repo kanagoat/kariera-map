@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="kk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#eef5f9" />
+    <title>Қызығушылық картасы</title>
+    <link rel="preload" href="fonts/golos-text-cyrillic-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="fonts/montserrat-cyrillic-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top" id="top">
+      <div class="top-inner">
+        <div class="top-row">
+          <span class="brand" id="brand">Қызығушылық картасы</span>
+          <div class="lang" id="lang" role="group" aria-label="Тіл / Язык"></div>
+        </div>
+        <ol class="trail" id="trail" aria-label="Қай кезеңдесің" hidden></ol>
+      </div>
+    </header>
+
+    <main id="app" class="stage" aria-live="polite"></main>
+
+    <noscript>
+      <p class="noscript">Сауалнама жұмыс істеуі үшін браузерде JavaScript қосулы болуы керек.<br />Для работы опроса в браузере должен быть включён JavaScript.</p>
+    </noscript>
+
+    <script src="config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="data/questionnaire.js"></script>
+    <script src="scoring.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+# clasp: привязка к проекту и токены — не публиковать
+.clasp.json
+.clasprc.json
+**/.clasprc.json
+
+# ответы учеников и выгрузки
+zhauaptar-*.json
+*.csv.bak
+responses/
+exports/
+
+# системное
+.DS_Store
+node_modules/
