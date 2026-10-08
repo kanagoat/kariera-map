@@ -111,5 +111,5 @@ New version. Адрес при этом остаётся прежним.
 ## Проверка после изменений
 
 ```
-node --test tests/scoring.test.js tests/summary.test.js
+node --test tests/scoring.test.js tests/summary.test.js tests/adaptive.test.js
 ```

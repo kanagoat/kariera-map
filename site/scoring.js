@@ -46,9 +46,17 @@
       personalMean !== null &&
       (personalMean >= THRESHOLDS.uninformativeHigh || personalMean <= THRESHOLDS.uninformativeLow);
 
+    return Object.assign(
+      { personalMean: round2(personalMean), raw: mapValues(raw, round2), dev: mapValues(dev, round2), uninformative },
+      selectCandidates(Q, dev)
+    );
+  }
+
+  // dev: { ENG: сан | null, ... } бойынша мүмкін бағыттарды таңдау. 2-кезең (adaptive.js) де осыны қолданады.
+  function selectCandidates(Q, dev) {
     const ranked = Q.fields
       .map((f) => ({ code: f.code, dev: dev[f.code] }))
-      .filter((x) => x.dev !== null)
+      .filter((x) => x.dev !== null && x.dev !== undefined)
       .sort((a, b) => b.dev - a.dev);
 
     let within = [];
@@ -64,17 +72,7 @@
       if (!shown.includes(ranked[i].code)) shown.push(ranked[i].code);
     }
     const rejected = ranked.filter((x) => x.dev <= -THRESHOLDS.candidateWindow).map((x) => x.code);
-
-    return {
-      personalMean: round2(personalMean),
-      raw: mapValues(raw, round2),
-      dev: mapValues(dev, round2),
-      uninformative,
-      wide,
-      candidates: strict,
-      shown,
-      rejected,
-    };
+    return { wide, candidates: strict, shown, rejected };
   }
 
   // sequence: көрсетілген рет [{id, kind, expected}], answers: {id: 1..5}, times: {id: ms}
@@ -202,7 +200,7 @@
     return out;
   }
 
-  const Scoring = { THRESHOLDS, scoreInterests, scoreQuality, scoreMatrix, scoreAnxiety, finalize, readSubject };
+  const Scoring = { THRESHOLDS, scoreInterests, selectCandidates, scoreQuality, scoreMatrix, scoreAnxiety, finalize, readSubject };
   if (typeof module !== "undefined" && module.exports) module.exports = Scoring;
   else root.Scoring = Scoring;
 })(typeof window !== "undefined" ? window : globalThis);

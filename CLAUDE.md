@@ -16,6 +16,8 @@
 - `site/fonts/` — шрифты Golos Text и Montserrat (OFL) лежат на сайте: полная поддержка ә ғ қ ң ө ұ ү һ і,
   без запросов к Google Fonts.
 - `site/app.js` — экраны, сохранение прогресса в localStorage, сбор и отправка данных.
+- `site/adaptive.js`, `site/data/adaptive.js` — движок и банк вопросов этапа 2 (v3.0). Пока не подключены
+  к `index.html`; проект — `docs/adaptive-design.md`, симуляция — `tools/simulate.js`.
 - `apps-script/Code.gs` — приёмник в Google Таблице (листы Raw, Responses, Scores).
 - `apps-script/Summary.gs` — лист «Сводка» с формулами по листу Scores и меню «Профориентация».
 - `docs/scoring-rules.md` — правила подсчёта словами. Код и этот документ должны совпадать.
@@ -43,7 +45,8 @@
 
 ```
 cd site && python3 -m http.server 8000     # локальный просмотр
-node --test tests/scoring.test.js tests/summary.test.js   # проверки подсчёта и сводки
+node --test tests/scoring.test.js tests/summary.test.js tests/adaptive.test.js   # проверки
+node tools/simulate.js 10000                 # симуляция этапа 2 → docs/simulation-results.md
 ```
 
 ## Что ещё не сделано
