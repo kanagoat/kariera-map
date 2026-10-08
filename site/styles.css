@@ -1001,3 +1001,19 @@ body {
     animation: spin 3s linear infinite !important;
   }
 }
+
+/* кіру коды */
+.code-input {
+  font-family: var(--display) !important;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.code-input::placeholder {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}

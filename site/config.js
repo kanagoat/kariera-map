@@ -6,6 +6,10 @@ window.APP_CONFIG = {
   // Бос тұрса, сайт «сынақ режимінде» істейді: жауаптар еш жерге жіберілмейді.
   endpoint: "https://script.google.com/macros/s/AKfycbzZOvrl3yk3WO_dqm6gloVEq3QirSTYFFL5me-BpGHOJp-zBGPXDlClb7Y2ksbqcwCpog/exec",
 
+  // true болса, сауалнама алдында мұғалім берген бір реттік код сұралады (кестедегі Codes парағы).
+  // Код сілтемеде де келуі мүмкін: site/?k=K7PM3Q. Сынақ режимінде (endpoint бос) код сұралмайды.
+  requireCode: true,
+
   // Лек атауы. Сілтемеге ?c=... қосып та беруге болады: site/?c=lek-2
   cohort: "pilot-2026-10",
 

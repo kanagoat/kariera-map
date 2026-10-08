@@ -11,6 +11,7 @@
   const CFG = window.APP_CONFIG || {};
   const STORE_KEY = "kk_map_v2";
   const LANG_KEY = "kk_map_lang";
+  const DEVICE_KEY = "kk_map_device";
   const app = document.getElementById("app");
   const trail = document.getElementById("trail");
   const langSwitch = document.getElementById("lang");
@@ -18,11 +19,29 @@
 
   const SEQUENCE = Q.buildInterestSequence();
   const FIELD = Object.fromEntries(Q.fields.map((f) => [f.code, f]));
-  const STEP_STAGE = { about: 0, intake: 0, interests: 1, ranking: 2, subjects: 3, feelings: 3, send: 4, done: 4 };
+  const STEP_STAGE = { code: 0, about: 0, intake: 0, interests: 1, ranking: 2, subjects: 3, feelings: 3, send: 4, done: 4 };
   const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const params = new URLSearchParams(location.search);
   const cohort = params.get("c") || CFG.cohort || "";
+  const urlCode = params.get("k") || "";
+  const needCode = !!(CFG.requireCode && CFG.endpoint);
+  const normCode = (s) => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+  // Құрылғының кездейсоқ белгісі: код осы құрылғыға байланады (жеке дерек емес).
+  let deviceMem = "";
+  function deviceId() {
+    try {
+      let d = localStorage.getItem(DEVICE_KEY);
+      if (!d) {
+        d = newId() + newId();
+        localStorage.setItem(DEVICE_KEY, d);
+      }
+      return d;
+    } catch (e) {
+      return deviceMem || (deviceMem = newId() + newId());
+    }
+  }
 
   // ---------- тіл ----------
   let lang = pickLang();
@@ -85,6 +104,7 @@
     step: "welcome",
     submissionId: newId(),
     startedAt: Date.now(),
+    access: { code: "", ok: false, cohort: "" },
     student: { name: "", grade: "", after9: "", consent: false },
     intake: { plan: "", planUnknown: false, confidence: 50, statedPair: "", teacher: "", teacherSubject: "", sportArt: "", grant: "" },
     idx: 0,
@@ -99,6 +119,8 @@
   });
 
   let state = load() || fresh();
+  if (!state.access) state.access = { code: "", ok: false, cohort: "" };
+  let afterCode = null;
   // бет қайта ашылғанда алдымен сәлемдесу беті шығады, «Жалғастыру» сақталған қадамға апарады
   let resumeStep = state.step !== "welcome" ? state.step : null;
   state.step = "welcome";
@@ -159,7 +181,7 @@
       h.focus({ preventScroll: true });
     }
   }
-  const STEP_ORDER = ["welcome", "about", "intake", "interests", "ranking", "subjects", "feelings", "send", "done"];
+  const STEP_ORDER = ["welcome", "code", "about", "intake", "interests", "ranking", "subjects", "feelings", "send", "done"];
 
   function renderTrail() {
     const stage = STEP_STAGE[state.step];
@@ -176,7 +198,7 @@
 
   function render() {
     renderTrail();
-    const views = { welcome, about, intake, interests, ranking, subjects, feelings, send, done };
+    const views = { welcome, code, about, intake, interests, ranking, subjects, feelings, send, done };
     (views[state.step] || welcome)();
   }
 
@@ -280,8 +302,85 @@
         state = fresh();
         resumeStep = null;
       }
-      go(resumeStep || "about");
+      const target = resumeStep || "about";
+      if (needCode && !state.access.ok) {
+        afterCode = target === "code" ? "about" : target;
+        return go("code");
+      }
+      go(target);
     };
+  }
+
+  // ---------- 0а. Кіру коды ----------
+  function code() {
+    const a = state.access;
+    if (!a.code && urlCode) a.code = normCode(urlCode);
+    app.innerHTML = `
+      <section class="card${enterCls()}">
+        <h2>${T.codeTitle}</h2>
+        <p class="hint">${T.codeHint}</p>
+        <label class="field">${T.codeLabel}
+          <input type="text" id="code" class="code-input" value="${esc(a.code)}" placeholder="${esc(T.codePh)}"
+            autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" />
+        </label>
+        <div class="actions">
+          <button class="btn ghost" data-act="back">${T.back}</button>
+          <button class="btn primary" data-act="check">${T.codeCheck}</button>
+        </div>
+      </section>`;
+    const input = app.querySelector("#code");
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkCode();
+    });
+    app.oninput = () => {
+      a.code = input.value;
+      save();
+    };
+    app.onclick = (e) => {
+      if (e.target.closest("[data-act=back]")) return go("welcome");
+      if (e.target.closest("[data-act=check]")) checkCode();
+    };
+  }
+
+  const codeErrors = () => ({
+    not_found: T.errCodeNotFound,
+    code_invalid: T.errCodeNotFound,
+    used: T.errCodeUsed,
+    code_used: T.errCodeUsed,
+    other_device: T.errCodeOther,
+    code_other_device: T.errCodeOther,
+  });
+
+  function checkCode() {
+    const a = state.access;
+    const c = normCode(a.code);
+    if (!c) return showError(T.errCodeEmpty);
+    const btn = app.querySelector("[data-act=check]");
+    if (btn.disabled) return;
+    btn.disabled = true;
+    btn.textContent = T.codeChecking;
+    const reset = () => {
+      btn.disabled = false;
+      btn.textContent = T.codeCheck;
+    };
+    fetch(CFG.endpoint + "?action=check&code=" + encodeURIComponent(c) + "&device=" + encodeURIComponent(deviceId()))
+      .then((res) => res.json())
+      .then((d) => {
+        if (!d || !d.ok) throw new Error("server");
+        if (!d.valid) {
+          reset();
+          return showError(codeErrors()[d.reason] || T.errCodeNotFound);
+        }
+        a.code = c;
+        a.ok = true;
+        a.cohort = d.cohort || "";
+        save();
+        go(afterCode || "about");
+      })
+      .catch(() => {
+        reset();
+        showError(T.errCodeNet);
+      });
   }
 
   // ---------- 1. Танысу ----------
@@ -717,7 +816,9 @@
     const r = {
       submission_id: state.submissionId,
       submitted_at: now.toISOString(),
-      cohort,
+      cohort: state.access.cohort || cohort,
+      access_code: state.access.ok ? state.access.code : "",
+      access_device: state.access.ok ? deviceId() : "",
       version: CFG.version || "",
       lang,
       name: state.student.name.trim(),
@@ -751,7 +852,8 @@
     const s = {
       submission_id: state.submissionId,
       submitted_at: now.toISOString(),
-      cohort,
+      cohort: r.cohort,
+      access_code: r.access_code,
       lang,
       name: r.name,
       grade: r.grade,
@@ -818,14 +920,15 @@
         enter = "fwd";
         render();
       })
-      .catch(sendFailed);
+      .catch((err) => sendFailed(err && err.message));
   }
 
-  function sendFailed() {
+  function sendFailed(reason) {
+    const codeMsg = codeErrors()[reason];
     app.innerHTML = `
       <section class="card center enter enter-fade">
         <h2>${T.failTitle}</h2>
-        <p class="hint">${T.failHint}</p>
+        <p class="hint">${codeMsg || T.failHint}</p>
         <div class="actions">
           <button class="btn primary" data-act="retry">${T.retry}</button>
           <button class="btn ghost" data-act="file">${T.saveFile}</button>

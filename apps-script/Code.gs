@@ -8,14 +8,19 @@
  *   Responses — сырые ответы, одна строка на ученика
  *   Scores    — посчитанные сайтом показатели
  *   Raw       — исходный JSON каждой отправки (страховка: по нему можно пересчитать всё заново)
+ *   Codes     — одноразовые коды доступа (Codes.gs)
  */
 
 const SHEET_RESPONSES = 'Responses';
 const SHEET_SCORES = 'Scores';
 const SHEET_RAW = 'Raw';
 const MAX_BODY = 200000; // байт; обычная отправка занимает около 6–8 тысяч
+// true — анкета принимается только с действующим кодом из листа Codes (Codes.gs)
+const REQUIRE_CODE = true;
 
-function doGet() {
+function doGet(e) {
+  const p = (e && e.parameter) || {};
+  if (p.action === 'check') return json_(checkCode_(p.code, p.device));
   return json_({ ok: true, service: 'proforientation', time: new Date().toISOString() });
 }
 
@@ -37,10 +42,18 @@ function doPost(e) {
     // повторная отправка той же анкеты (ученик нажал «қайта жіберу») не создаёт вторую строку
     if (alreadySaved_(ss, id)) return json_({ ok: true, duplicate: true });
 
+    let claim = null;
+    if (REQUIRE_CODE) {
+      claim = claimCodeForSubmission_(ss, responses.access_code, responses.access_device, id);
+      if (claim.error) return json_({ ok: false, error: claim.error });
+      scores.code_student = claim.student; // имя из листа Codes — чтобы сразу видеть, чья анкета
+    }
+
     const received = new Date();
     appendByHeaders_(ss, SHEET_RAW, { submission_id: id, received_at: received, json: body });
     appendByHeaders_(ss, SHEET_RESPONSES, Object.assign({ received_at: received }, responses));
     appendByHeaders_(ss, SHEET_SCORES, Object.assign({ received_at: received }, scores));
+    if (claim) markCodeUsed_(claim, id);
 
     return json_({ ok: true });
   } catch (err) {
@@ -90,7 +103,10 @@ function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-/** Запустите вручную из редактора, чтобы проверить права и создание листов. */
+/**
+ * Запустите вручную из редактора, чтобы проверить права и создание листов.
+ * При REQUIRE_CODE = true ответ будет {"ok":false,"error":"code_invalid"}: это нормально, у теста нет кода.
+ */
 function selfTest() {
   const fake = {
     postData: {

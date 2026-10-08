@@ -37,6 +37,7 @@ var SUMMARY_FIELDS = [
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('Профориентация')
+    .addItem('Выдать коды', 'issueCodes')
     .addItem('Обновить сводку', 'buildSummary')
     .addItem('Включить автообновление (каждые 10 минут)', 'enableAutoSummary')
     .addToUi();

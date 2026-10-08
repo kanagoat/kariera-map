@@ -19,6 +19,8 @@
 - `site/adaptive.js`, `site/data/adaptive.js` — движок и банк вопросов этапа 2 (v3.0). Пока не подключены
   к `index.html`; проект — `docs/adaptive-design.md`, симуляция — `tools/simulate.js`.
 - `apps-script/Code.gs` — приёмник в Google Таблице (листы Raw, Responses, Scores).
+- `apps-script/Codes.gs` — одноразовые коды доступа (лист `Codes`, меню «Выдать коды»). Приёмник принимает
+  анкету только с действующим кодом (`REQUIRE_CODE` в `Code.gs`), сайт спрашивает код (`requireCode`).
 - `apps-script/Summary.gs` — лист «Сводка» с формулами по листу Scores и меню «Профориентация».
 - `docs/scoring-rules.md` — правила подсчёта словами. Код и этот документ должны совпадать.
 
