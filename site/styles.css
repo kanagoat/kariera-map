@@ -671,9 +671,22 @@ h3 {
   border-radius: var(--radius);
   background: var(--sky-wash);
 }
-.result ol {
-  margin: 0 0 10px;
+.result ol,
+.result ul {
+  margin: 0 0 16px;
   padding-left: 22px;
+}
+.result li {
+  margin: 4px 0;
+  font-weight: 600;
+  animation: rise 0.45s calc(0.5s + var(--i, 0) * 0.08s) var(--ease) both;
+}
+.result .pairs li {
+  font-weight: 500;
+}
+.result h3 + ol,
+.result h3 + ul {
+  margin-top: 6px;
 }
 .noscript {
   max-width: 640px;

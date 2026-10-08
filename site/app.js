@@ -85,7 +85,7 @@
     step: "welcome",
     submissionId: newId(),
     startedAt: Date.now(),
-    student: { name: "", school: "", grade: "", after9: "", consent: false },
+    student: { name: "", grade: "", after9: "", consent: false },
     intake: { plan: "", planUnknown: false, confidence: 50, statedPair: "", teacher: "", teacherSubject: "", sportArt: "", grant: "" },
     idx: 0,
     answers: {},
@@ -293,9 +293,6 @@
         <label class="field">${T.name}
           <input type="text" id="name" autocomplete="name" value="${esc(st.name)}" placeholder="${esc(T.namePh)}" />
         </label>
-        <label class="field">${T.school}
-          <input type="text" id="school" value="${esc(st.school)}" placeholder="${esc(T.schoolPh)}" />
-        </label>
         <div class="field">${T.grade}
           ${choice("grade", st.grade, ["9", "10", "11"].map((n) => ({ v: n, t: T.gradeOpt(n) })))}
         </div>
@@ -314,7 +311,6 @@
       </section>`;
     app.oninput = () => {
       st.name = app.querySelector("#name").value;
-      st.school = app.querySelector("#school").value;
       st.consent = app.querySelector("#consent").checked;
       save();
     };
@@ -725,7 +721,6 @@
       version: CFG.version || "",
       lang,
       name: state.student.name.trim(),
-      school: state.student.school.trim(),
       grade: state.student.grade,
       after9: state.student.after9,
       plan: state.intake.plan.trim(),
@@ -879,11 +874,16 @@
           <path class="near" d="M4 86 L50 22 L74 54 L88 40 L116 86Z"/><path class="flag" d="M50 22 V4 L66 10 L50 16"/>
         </svg>
         <h2>${T.doneTitle}</h2>
-        <p class="lead">${esc(T.doneLead(first))}</p>
+        <p class="lead">${esc(show ? T.doneLeadResult(first) : T.doneLead(first))}</p>
         ${
           show
             ? `<div class="result"><h3>${T.resultTitle}</h3>
-            <ol>${state.ranking.concat(state.added ? [state.added] : []).map((c) => `<li>${esc(fieldName(c))}</li>`).join("")}</ol>
+            <ol>${state.ranking.concat(state.added ? [state.added] : []).map((c, i) => `<li style="--i:${i}">${esc(fieldName(c))}</li>`).join("")}</ol>
+            ${
+              view.fin.pairs.length
+                ? `<h3>${T.pairsTitle}</h3><ul class="pairs">${view.fin.pairs.map((p, i) => `<li style="--i:${i}">${esc(pairLabel(p))}</li>`).join("")}</ul>`
+                : ""
+            }
             <p class="hint">${T.resultHint}</p></div>`
             : ""
         }
