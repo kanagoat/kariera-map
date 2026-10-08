@@ -1017,3 +1017,34 @@ body {
   letter-spacing: 0.04em;
   text-transform: none;
 }
+
+/* шынайы жауап туралы */
+.points {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  display: grid;
+  gap: 10px;
+}
+.points li {
+  position: relative;
+  padding: 12px 14px 12px 46px;
+  border-radius: 14px;
+  background: var(--paper);
+  animation: rise 0.45s calc(0.15s + var(--i) * 0.09s) var(--ease) both;
+}
+.points li::before {
+  content: "✓";
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}

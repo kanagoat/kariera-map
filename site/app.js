@@ -19,7 +19,7 @@
 
   const SEQUENCE = Q.buildInterestSequence();
   const FIELD = Object.fromEntries(Q.fields.map((f) => [f.code, f]));
-  const STEP_STAGE = { code: 0, about: 0, intake: 0, interests: 1, ranking: 2, subjects: 3, feelings: 3, send: 4, done: 4 };
+  const STEP_STAGE = { code: 0, about: 0, intake: 0, honesty: 1, interests: 1, ranking: 2, subjects: 3, feelings: 3, send: 4, done: 4 };
   const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const params = new URLSearchParams(location.search);
@@ -182,7 +182,7 @@
       h.focus({ preventScroll: true });
     }
   }
-  const STEP_ORDER = ["welcome", "code", "about", "intake", "interests", "ranking", "subjects", "feelings", "send", "done"];
+  const STEP_ORDER = ["welcome", "code", "about", "intake", "honesty", "interests", "ranking", "subjects", "feelings", "send", "done"];
 
   function renderTrail() {
     const stage = STEP_STAGE[state.step];
@@ -199,7 +199,7 @@
 
   function render() {
     renderTrail();
-    const views = { welcome, code, about, intake, interests, ranking, subjects, feelings, send, done };
+    const views = { welcome, code, about, intake, honesty, interests, ranking, subjects, feelings, send, done };
     (views[state.step] || welcome)();
   }
 
@@ -506,8 +506,27 @@
       if (e.target.closest("[data-act=next]")) {
         if (!it.statedPair) return showError(T.errPair);
         if (!it.teacher || !it.sportArt || !it.grant) return showError(T.errAll);
-        go("interests");
+        go("honesty");
       }
+    };
+  }
+
+  // ---------- 2а. Шынайы жауап туралы ----------
+  function honesty() {
+    app.innerHTML = `
+      <section class="card honesty${enterCls()}">
+        <h2>${T.honestyTitle}</h2>
+        <p class="lead">${T.honestyLead}</p>
+        <ul class="points">${T.honestyPoints.map((p, i) => `<li style="--i:${i}">${p}</li>`).join("")}</ul>
+        <div class="actions">
+          <button class="btn ghost" data-act="back">${T.back}</button>
+          <button class="btn primary" data-act="pledge">${T.honestyPledge}</button>
+        </div>
+      </section>`;
+    app.oninput = null;
+    app.onclick = (e) => {
+      if (e.target.closest("[data-act=back]")) return go("intake");
+      if (e.target.closest("[data-act=pledge]")) go("interests");
     };
   }
 
@@ -517,13 +536,11 @@
     if (state.idx >= total) return go("ranking");
     const item = SEQUENCE[state.idx];
     const value = state.answers[item.id];
-    const first = state.idx === 0 && value === undefined;
     const pct = Math.round((state.idx / total) * 100);
     app.innerHTML = `
       <section class="card ask${enterCls()}">
         <div class="count"><span>${state.idx + 1} / ${total}</span>
           <span class="bar"><span style="width:${barFrom}%"></span></span></div>
-        ${first ? `<p class="hint">${T.interestsHint}</p>` : ""}
         <h2 class="statement">${esc(itemText(item))}</h2>
         ${scaleButtons("interest", value, interestScale(), false)}
         <div class="actions">
@@ -547,7 +564,7 @@
         save();
         return interests();
       }
-      if (e.target.closest("[data-act=exit]")) return go("intake");
+      if (e.target.closest("[data-act=exit]")) return go("honesty");
       if (e.target.closest("[data-act=fwd]")) {
         state.idx += 1;
         enter = "fwd";
