@@ -4,7 +4,7 @@
 window.APP_CONFIG = {
   // Google Apps Script веб-қосымшасының мекенжайы (README.md, 2-қадам).
   // Бос тұрса, сайт «сынақ режимінде» істейді: жауаптар еш жерге жіберілмейді.
-  endpoint: "",
+  endpoint: "https://script.google.com/macros/s/AKfycbzZOvrl3yk3WO_dqm6gloVEq3QirSTYFFL5me-BpGHOJp-zBGPXDlClb7Y2ksbqcwCpog/exec",
 
   // Лек атауы. Сілтемеге ?c=... қосып та беруге болады: site/?c=lek-2
   cohort: "pilot-2026-10",

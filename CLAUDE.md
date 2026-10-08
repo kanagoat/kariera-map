@@ -43,7 +43,7 @@
 
 ```
 cd site && python3 -m http.server 8000     # локальный просмотр
-node --test tests/scoring.test.js          # проверки подсчёта
+node --test tests/scoring.test.js tests/summary.test.js   # проверки подсчёта и сводки
 ```
 
 ## Что ещё не сделано
