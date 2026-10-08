@@ -10,6 +10,7 @@
     minCandidates: 2, // реттеу қадамы үшін кемінде екеу көрсетіледі
     uninformativeHigh: 4.3, // жалпы орташа осыдан жоғары болса — «ақпаратсыз профиль»
     uninformativeLow: 2.0,
+    minSpread: 0.8, // ең жоғары мен ең төменгі бағыттың айырмасы осыдан аз болса — да «ақпаратсыз» (тегіс профиль)
     straightline: 20, // қатарынан бірдей жауап саны
     minMedianMs: 3000, // бір тұжырымға медиана уақыт
     matrixHigh: 0.5,
@@ -42,12 +43,16 @@
       dev[f.code] = raw[f.code] === null ? null : raw[f.code] - personalMean;
     });
 
+    const devs = Object.values(dev).filter((x) => x !== null);
+    const spread = devs.length ? Math.max(...devs) - Math.min(...devs) : null;
     const uninformative =
       personalMean !== null &&
-      (personalMean >= THRESHOLDS.uninformativeHigh || personalMean <= THRESHOLDS.uninformativeLow);
+      (personalMean >= THRESHOLDS.uninformativeHigh ||
+        personalMean <= THRESHOLDS.uninformativeLow ||
+        spread < THRESHOLDS.minSpread);
 
     return Object.assign(
-      { personalMean: round2(personalMean), raw: mapValues(raw, round2), dev: mapValues(dev, round2), uninformative },
+      { personalMean: round2(personalMean), raw: mapValues(raw, round2), dev: mapValues(dev, round2), spread: round2(spread), uninformative },
       selectCandidates(Q, dev)
     );
   }

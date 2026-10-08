@@ -176,3 +176,21 @@ test("интерфейс: в kk и ru одинаковый набор ключе
   assert.equal(I18N.ru.stages.length, I18N.kk.stages.length);
   assert.deepEqual(Object.keys(I18N.ru.milestones), Object.keys(I18N.kk.milestones));
 });
+
+test("ровный профиль в середине шкалы — неинформативный (v2.4)", () => {
+  // всё на 3: среднее 3,0 — по старому правилу проходило как «широкий»
+  const flat = S.scoreInterests(Q, answersFrom({}, 3));
+  assert.equal(flat.spread, 0);
+  assert.equal(flat.uninformative, true);
+  // почти всё на 4, одна область чуть выше: разброс меньше 0,8
+  const a = answersFrom({}, 4);
+  a.IT1 = 5;
+  a.IT2 = 5;
+  const nearlyFlat = S.scoreInterests(Q, a);
+  assert.ok(nearlyFlat.spread < S.THRESHOLDS.minSpread);
+  assert.equal(nearlyFlat.uninformative, true);
+  // выраженный профиль остаётся информативным
+  const clear = S.scoreInterests(Q, answersFrom({ IT: 5, ECO: 1 }, 3));
+  assert.ok(clear.spread >= S.THRESHOLDS.minSpread);
+  assert.equal(clear.uninformative, false);
+});

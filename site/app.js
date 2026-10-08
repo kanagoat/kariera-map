@@ -26,6 +26,7 @@
   const cohort = params.get("c") || CFG.cohort || "";
   const urlCode = params.get("k") || "";
   const needCode = !!(CFG.requireCode && CFG.endpoint);
+  const MAX_SKIPPED = 4; // «оқымаймын» белгісі ең көбі осынша пәнге
   const normCode = (s) => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 
   // Құрылғының кездейсоқ белгісі: код осы құрылғыға байланады (жеке дерек емес).
@@ -712,6 +713,8 @@
       }
       if (e.target.closest("[data-act=back]")) return go("ranking");
       if (e.target.closest("[data-act=next]")) {
+        const skipped = Q.subjects.filter((s) => (m[s.key] || {}).skip === true).length;
+        if (skipped > MAX_SKIPPED) return showError(T.errTooManySkipped(MAX_SKIPPED));
         const missing = Q.subjects.find((s) => !subjectComplete(s.key));
         if (missing) {
           showError(T.errSubject(subjectName(missing)));
@@ -872,6 +875,7 @@
       longest_run: quality.longestRun,
       median_ms: quality.medianMs,
       personal_mean: interestsScore.personalMean,
+      spread: interestsScore.spread,
       uninformative: interestsScore.uninformative,
       wide: interestsScore.wide,
     };
@@ -884,11 +888,12 @@
       s["read_" + sub.key] = matrixScore.reading[sub.key];
       s["like_dev_" + sub.key] = matrixScore.dev[sub.key].like;
     });
+    s.matrix_skipped = Q.subjects.filter((sub) => matrixClean[sub.key] === null).length;
     s.teacher = r.teacher;
     s.sport_art = r.sport_art;
     s.after9 = r.after9;
 
-    return { responses: r, scores: s, view: { interestsScore, fin } };
+    return { responses: r, scores: s, view: { interestsScore, fin, quality } };
   }
 
   let lastPayload = null;
@@ -968,16 +973,18 @@
 
   function done() {
     const view = lastPayload ? lastPayload.view : null;
-    const show = CFG.showResultToStudent && view;
+    const show = CFG.showResultToStudent && view && view.quality.valid;
+    const invalid = CFG.showResultToStudent && view && !view.quality.valid;
     const first = state.student.name.trim().split(/\s+/)[0] || "";
     app.innerHTML = `
       <section class="card center done${enterCls()}">
-        ${confetti()}
+        ${invalid ? "" : confetti()}
         <svg class="peak" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
           <path class="near" d="M4 86 L50 22 L74 54 L88 40 L116 86Z"/><path class="flag" d="M50 22 V4 L66 10 L50 16"/>
         </svg>
         <h2>${T.doneTitle}</h2>
         <p class="lead">${esc(show ? T.doneLeadResult(first) : T.doneLead(first))}</p>
+        ${invalid ? `<div class="result"><h3>${T.invalidTitle}</h3><p class="hint">${T.invalidText}</p></div>` : ""}
         ${
           show
             ? `<div class="result"><h3>${T.resultTitle}</h3>
