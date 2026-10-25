@@ -38,6 +38,10 @@ function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('Профориентация')
     .addItem('Выдать коды', 'issueCodes')
+    .addSeparator()
+    .addItem('Карточка ученика (выделите строку в Scores)', 'makeCard')
+    .addItem('Карточки для всех', 'makeCardsForAll')
+    .addSeparator()
     .addItem('Обновить сводку', 'buildSummary')
     .addItem('Включить автообновление (каждые 10 минут)', 'enableAutoSummary')
     .addToUi();

@@ -21,6 +21,8 @@
 - `apps-script/Code.gs` — приёмник в Google Таблице (листы Raw, Responses, Scores).
 - `apps-script/Codes.gs` — одноразовые коды доступа (лист `Codes`, меню «Выдать коды»). Приёмник принимает
   анкету только с действующим кодом (`REQUIRE_CODE` в `Code.gs`), сайт спрашивает код (`requireCode`).
+- `apps-script/Cards.gs` — карточка ученика для консультации (документ Google, меню «Карточка ученика»).
+  Справочник `apps-script/CardData.gs` собирается из анкеты и `docs/nct-groups.csv`: `node tools/build-card-data.js`.
 - `apps-script/Summary.gs` — лист «Сводка» с формулами по листу Scores и меню «Профориентация».
 - `docs/scoring-rules.md` — правила подсчёта словами. Код и этот документ должны совпадать.
 
@@ -48,7 +50,7 @@
 
 ```
 cd site && python3 -m http.server 8000     # локальный просмотр
-node --test tests/scoring.test.js tests/summary.test.js tests/adaptive.test.js   # проверки
+node --test tests/scoring.test.js tests/summary.test.js tests/adaptive.test.js tests/cards.test.js   # проверки
 node tools/simulate.js 10000                 # симуляция этапа 2 → docs/simulation-results.md
 ```
 
@@ -57,8 +59,6 @@ node tools/simulate.js 10000                 # симуляция этапа 2 �
 - Адаптивное углубление (этап 2, v3.0): проект в `docs/adaptive-design.md`. Версия до него — git-метка `v2.2`.
 - Предметные срезы (раздел В): по 10 заданий формата ЕНТ на предмет возможных пар. Заданий нет.
 - Повторный замер после курса: та же анкета с пометкой «после», сравнение профилей (корреляция ≥ 0,6).
-- Страница или скрипт для учителя: карточка ученика из листа `Scores` плюс группы программ из
-  `docs/nct-groups.csv`, черновик roadmap.
 - Пересчёт листа `Scores` из листа `Raw` при смене порогов.
 - Проверка на первом потоке: внутренняя согласованность шкал, доля «широких» и «неинформативных»
   профилей, распределение рекомендаций по полу.
